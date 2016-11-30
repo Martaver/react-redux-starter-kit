@@ -10,12 +10,16 @@ export const Counter = (props) => (
     <button className='btn btn-default' onClick={props.doubleAsync}>
       Double (Async)
     </button>
+    <button className='btn btn-default' onClick={props.doubleObs}>
+      Double (Rx)
+    </button>
   </div>
 )
 
 Counter.propTypes = {
   counter     : React.PropTypes.number.isRequired,
   doubleAsync : React.PropTypes.func.isRequired,
+  doubleObs : React.PropTypes.func.isRequired,
   increment   : React.PropTypes.func.isRequired
 }
 

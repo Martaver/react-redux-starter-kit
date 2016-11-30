@@ -1,3 +1,5 @@
+import {combineEpics} from "redux-observable/lib/combineEpics";
+
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -22,6 +24,7 @@ export function increment (value = 1) {
     reducer take care of this logic.  */
 
 export const doubleAsync = () => {
+  console.log('dbl async')
   return (dispatch, getState) => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -32,16 +35,27 @@ export const doubleAsync = () => {
   }
 }
 
+export const DOUBLE_OBS = 'DOUBLE_OBS'
+
+export function doubleObs () {
+
+  return {
+    type: DOUBLE_OBS
+  }
+}
+
 export const actions = {
   increment,
-  doubleAsync
+  doubleAsync,
+  doubleObs
 }
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT] : (state, action) => state + action.payload
+  [COUNTER_INCREMENT] : (state, action) => state + action.payload,
+  [DOUBLE_OBS] : (state, action) => state /2
 }
 
 // ------------------------------------
@@ -49,7 +63,13 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = 0
 export default function counterReducer (state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type]
 
+  const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }
+
+export const epic = action$ => action$.ofType(DOUBLE_OBS).map(action => {
+  console.log('incrementing from rx')
+  increment()
+});
+
