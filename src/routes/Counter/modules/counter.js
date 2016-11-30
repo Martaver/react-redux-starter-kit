@@ -54,8 +54,7 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT] : (state, action) => state + action.payload,
-  [DOUBLE_OBS] : (state, action) => state /2
+  [COUNTER_INCREMENT] : (state, action) => state + action.payload
 }
 
 // ------------------------------------

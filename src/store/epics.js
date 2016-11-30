@@ -9,8 +9,6 @@ export const injectEpic = (store, { key, epic }) => {
 
   if(!store.epicMiddleware.asyncEpics) store.epicMiddleware.asyncEpics = {};
 
-  if (Object.hasOwnProperty.call(store.epicMiddleware.asyncEpics, key)) return
-
   store.epicMiddleware.asyncEpics[key] = epic;
   store.epicMiddleware.replaceEpic(makeRootEpic(store.epicMiddleware.asyncEpics))
 }
