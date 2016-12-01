@@ -15,7 +15,7 @@ export default (initialState = {}) => {
 
   const epicMiddleware = createEpicMiddleware(rootEpic);
 
-  const middleware = [epicMiddleware]
+  const middleware = [thunk, epicMiddleware];
 
   // ======================================================
   // Store Enhancers
@@ -47,12 +47,16 @@ export default (initialState = {}) => {
   store.unsubscribeHistory = browserHistory.listen(updateLocation(store))
 
   if (module.hot) {
+
+    module.hot.accept('./epics', () => {
+      const epics = require('./epics').default;
+      epicMiddleware.replaceEpic(epics(epicMiddleware.asyncEpics));
+    });
+
     module.hot.accept('./reducers', () => {
-      const reducers = require('./reducers').default
-      // const epics = require('./epics').default
-      store.replaceReducer(reducers(store.asyncReducers))
-      // epicMiddleware.replaceEpic(epics(epicMiddleware.asyncEpics));
-    })
+      const reducers = require('./reducers').default;
+      store.replaceReducer(reducers(store.asyncReducers));
+    });
   }
 
   return store

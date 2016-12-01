@@ -67,8 +67,7 @@ export default function counterReducer (state = initialState, action) {
   return handler ? handler(state, action) : state
 }
 
-export const epic = action$ => action$.ofType(DOUBLE_OBS).map(action => {
-  console.log('incrementing from rx')
-  increment()
+export const counterEpic = action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
+  return increment(-1);
 });
 

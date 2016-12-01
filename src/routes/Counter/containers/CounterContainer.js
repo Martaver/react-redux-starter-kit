@@ -15,7 +15,7 @@ import Counter from '../components/Counter'
 const mapDispatchToProps = {
   increment : () => increment(1),
   doubleAsync,
-  doubleObs : () => doubleObs(),
+  doubleObs,
 }
 
 const mapStateToProps = (state) => ({
