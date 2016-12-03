@@ -1,5 +1,3 @@
-import Immutable from 'immutable'
-import update from 'react-addons-update'
 import { RECEIVE_COMPANIES, RECEIVE_PRODUCTS, RECEIVE_TONES } from './socketActions'
 
 const initialState = {
@@ -7,28 +5,20 @@ const initialState = {
 }
 
 export default function socketReducer(state=initialState, action) {
+
     switch(action.type) {
         case 'RECEIVE_COMPANY':
-            let payload = {
-                ...action.payload.company,
-                products: [],
-                emotions: []
-            }
-            return update(state, {
-                companies: {$push: [payload]}
-            })
+           console.log('got company');
+           return state;
         case 'RECEIVE_PRODUCT':
-            let idx = action.payload.product.companyId
-            state.companies[idx] = update(state.companies[idx], {
-                products: {$push: [action.payload.product]}
-            })
+            console.log('got product');
             return state
         case 'RECEIVE_COMPANY_TONE':
-            idx = action.payload.tone.companyId
-            state.companies[idx] = update(state.companies[idx], {
-                emotions: {$push: [action.payload.tone]}
-            })
+            console.log('got company tone');
             return state
+      case 'TICK':
+            console.log('got tick');
+            return state;
         default:
             return state
     }

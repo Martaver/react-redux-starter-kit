@@ -10,7 +10,7 @@ let httpServer = http.createServer(server);
 let io = socketIo(httpServer);
 
 rx.Observable.interval(1000).subscribe(() => {
-  io.emit('tick', { type: 'TICK', payload: '*tick*'});
+  io.emit('action', { type: 'TICK', payload: '*tick*'});
 })
 
 io.on('connection', function(socket){

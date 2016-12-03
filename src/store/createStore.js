@@ -1,10 +1,17 @@
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
-import { createEpicMiddleware } from 'redux-observable'
 import { browserHistory } from 'react-router'
-import makeRootReducer from './reducers'
-import makeRootEpic from './epics'
+import {makeRootReducer, injectReducer} from './reducers'
 import { updateLocation } from './location'
+
+//RxJS integration
+import makeRootEpic from './epics'
+import { createEpicMiddleware } from 'redux-observable'
+
+//Socket.io integration
+import io from 'socket.io-client'
+import createSocketIoMiddleware from 'redux-socket.io'
+import socketReducer from '../socket/socketReducer'
 
 export default (initialState = {}) => {
   // ======================================================
@@ -15,7 +22,10 @@ export default (initialState = {}) => {
 
   const epicMiddleware = createEpicMiddleware(rootEpic);
 
-  const middleware = [thunk, epicMiddleware];
+  const socket = io();
+  const socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
+
+  const middleware = [socketIoMiddleware, thunk, epicMiddleware];
 
   // ======================================================
   // Store Enhancers
@@ -28,6 +38,7 @@ export default (initialState = {}) => {
     }
   }
 
+
   // ======================================================
   // Store Instantiation and HMR Setup
   // ======================================================
@@ -38,8 +49,10 @@ export default (initialState = {}) => {
       applyMiddleware(...middleware),
       ...enhancers
     )
-  )
+  );
   store.asyncReducers = {}
+
+  injectReducer(store, {key: 'socket', reducer: socketReducer});
 
   store.epicMiddleware = epicMiddleware;
 
