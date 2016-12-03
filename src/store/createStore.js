@@ -11,7 +11,6 @@ import { createEpicMiddleware } from 'redux-observable'
 //Socket.io integration
 import io from 'socket.io-client'
 import createSocketIoMiddleware from 'redux-socket.io'
-import socketReducer from '../socket/socketReducer'
 
 export default (initialState = {}) => {
   // ======================================================
@@ -25,7 +24,7 @@ export default (initialState = {}) => {
   const socket = io();
   const socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
 
-  const middleware = [socketIoMiddleware, thunk, epicMiddleware];
+  const middleware = [thunk, epicMiddleware, socketIoMiddleware];
 
   // ======================================================
   // Store Enhancers
@@ -51,8 +50,6 @@ export default (initialState = {}) => {
     )
   );
   store.asyncReducers = {}
-
-  injectReducer(store, {key: 'socket', reducer: socketReducer});
 
   store.epicMiddleware = epicMiddleware;
 

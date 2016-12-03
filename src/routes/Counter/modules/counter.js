@@ -1,4 +1,4 @@
-import {combineEpics} from "redux-observable/lib/combineEpics";
+import { combineEpics } from 'redux-observable'
 
 // ------------------------------------
 // Constants
@@ -44,6 +44,19 @@ export function doubleObs () {
   }
 }
 
+//A tick, normally received from socket.io
+export const TICK = 'TICK'
+
+export function tick(tick) {
+
+  return {
+    type: TICK,
+    payload: {
+      tick
+    }
+  }
+}
+
 export const actions = {
   increment,
   doubleAsync,
@@ -60,14 +73,24 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = 0
+const initialState = 0;
 export default function counterReducer (state = initialState, action) {
 
-  const handler = ACTION_HANDLERS[action.type]
+  const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state
 }
 
-export const counterEpic = action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
-  return increment(-1);
-});
+export const counterEpic = combineEpics(
+
+  //Async click of Double button, with a delay
+  action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
+    return increment(-1);
+  }),
+
+  //Received (usually) from socket.io tick - map to incrementing.
+  action$ => action$.ofType(TICK).map(action => {
+    return increment(1);
+  })
+
+);
 
