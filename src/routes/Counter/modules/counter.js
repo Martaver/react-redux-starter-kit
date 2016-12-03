@@ -1,13 +1,10 @@
 import { combineEpics } from 'redux-observable'
 
 // ------------------------------------
-// Constants
+// Actions
 // ------------------------------------
 export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
 
-// ------------------------------------
-// Actions
-// ------------------------------------
 export function increment (value = 1) {
   return {
     type    : COUNTER_INCREMENT,
@@ -33,7 +30,7 @@ export const doubleAsync = () => {
       }, 200)
     })
   }
-}
+};
 
 export const DOUBLE_OBS = 'DOUBLE_OBS'
 
@@ -64,24 +61,12 @@ export const actions = {
   doubleObs
 };
 
-// ------------------------------------
-// Action Handlers
-// ------------------------------------
-const ACTION_HANDLERS = {
-  [COUNTER_INCREMENT] : (state, action) => state + action.payload
-}
-
-// ------------------------------------
-// Reducer
-// ------------------------------------
 const initialState = 0;
-export default function counterReducer (state = initialState, action) {
 
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state
-}
-
-export const counterEpic = combineEpics(
+// ------------------------------------
+// Epic
+// ------------------------------------
+export const epic = combineEpics(
 
   //Async click of Double button, with a delay
   action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
@@ -92,6 +77,23 @@ export const counterEpic = combineEpics(
   action$ => action$.ofType(TICK).map(action => {
     return increment(1);
   })
-
 );
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
+const ACTION_HANDLERS = {
+  [COUNTER_INCREMENT] : (state, action) => state + action.payload
+};
+
+// ------------------------------------
+// Reducer
+// ------------------------------------
+export default function (state = initialState, action) {
+
+  const handler = ACTION_HANDLERS[action.type];
+  return handler ? handler(state, action) : state
+}
+
+
 
