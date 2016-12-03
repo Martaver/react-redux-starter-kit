@@ -1,18 +1,19 @@
-import React from 'react'
-import { IndexLink, Link } from 'react-router'
-import './Header.scss'
+import React, { Component, PropTypes } from 'react'
+import styles from  './Header.scss'
 
-export const Header = () => (
-  <div>
-    <h1>React Redux Starter Kit</h1>
-    <IndexLink to='/' activeClassName='route--active'>
-      Home
-    </IndexLink>
-    {' · '}
-    <Link to='/counter' activeClassName='route--active'>
-      Counter
-    </Link>
-  </div>
-)
+export default class Header extends Component {
+  render() {
+    return (
+      <div>
+        <div className={ styles.background } />
+        <h1 className={ styles.header } >
+          { this.props.title }
+        </h1>
+      </div>
+    )
+  }
+}
 
-export default Header
+Header.propTypes = {
+  title: PropTypes.string.isRequired
+}
