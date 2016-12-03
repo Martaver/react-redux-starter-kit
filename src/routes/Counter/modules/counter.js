@@ -45,10 +45,11 @@ export function doubleObs () {
 }
 
 export const actions = {
+  tick,
   increment,
   doubleAsync,
   doubleObs
-}
+};
 
 // ------------------------------------
 // Action Handlers
