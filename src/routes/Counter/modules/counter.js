@@ -1,13 +1,10 @@
-import {combineEpics} from "redux-observable/lib/combineEpics";
-
-// ------------------------------------
-// Constants
-// ------------------------------------
-export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
+import { combineEpics } from 'redux-observable'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
+export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
+
 export function increment (value = 1) {
   return {
     type    : COUNTER_INCREMENT,
@@ -33,7 +30,7 @@ export const doubleAsync = () => {
       }, 200)
     })
   }
-}
+};
 
 export const DOUBLE_OBS = 'DOUBLE_OBS'
 
@@ -44,6 +41,19 @@ export function doubleObs () {
   }
 }
 
+//A tick, normally received from socket.io
+export const TICK = 'TICK'
+
+export function tick(tick) {
+
+  return {
+    type: TICK,
+    payload: {
+      tick
+    }
+  }
+}
+
 export const actions = {
   tick,
   increment,
@@ -51,24 +61,39 @@ export const actions = {
   doubleObs
 };
 
+const initialState = 0;
+
+// ------------------------------------
+// Epic
+// ------------------------------------
+export const epic = combineEpics(
+
+  //Async click of Double button, with a delay
+  action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
+    return increment(-1);
+  }),
+
+  //Received (usually) from socket.io tick - map to incrementing.
+  action$ => action$.ofType(TICK).map(action => {
+    return increment(1);
+  })
+);
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
   [COUNTER_INCREMENT] : (state, action) => state + action.payload
-}
+};
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = 0
-export default function counterReducer (state = initialState, action) {
+export default function (state = initialState, action) {
 
-  const handler = ACTION_HANDLERS[action.type]
+  const handler = ACTION_HANDLERS[action.type];
   return handler ? handler(state, action) : state
 }
 
-export const counterEpic = action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
-  return increment(-1);
-});
+
 
