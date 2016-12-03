@@ -58,10 +58,11 @@ export function tick(tick) {
 }
 
 export const actions = {
+  tick,
   increment,
   doubleAsync,
   doubleObs
-}
+};
 
 // ------------------------------------
 // Action Handlers
