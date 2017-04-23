@@ -6,7 +6,7 @@ import AppContainer from './containers/AppContainer'
 // ========================================================
 // Store Instantiation
 // ========================================================
-const initialState = window.___INITIAL_STATE__
+const initialState = window.__INITIAL_STATE__
 const store = createStore(initialState)
 
 // ========================================================
@@ -21,15 +21,6 @@ let render = () => {
     <AppContainer store={store} routes={routes} />,
     MOUNT_NODE
   )
-}
-
-// ========================================================
-// Developer Tools Setup
-// ========================================================
-if (__DEV__) {
-  if (window.devToolsExtension) {
-    window.devToolsExtension.open()
-  }
 }
 
 // This code is excluded from production bundle
@@ -48,6 +39,7 @@ if (__DEV__) {
       try {
         renderApp()
       } catch (error) {
+        console.error(error)
         renderError(error)
       }
     }
