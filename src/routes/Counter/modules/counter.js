@@ -30,22 +30,20 @@ export const doubleAsync = () => {
       }, 200)
     })
   }
-};
+}
 
 export const DOUBLE_OBS = 'DOUBLE_OBS'
 
 export function doubleObs () {
-
   return {
     type: DOUBLE_OBS
   }
 }
 
-//A tick, normally received from socket.io
+// A tick, normally received from socket.io
 export const TICK = 'TICK'
 
-export function tick(tick) {
-
+export function tick (tick) {
   return {
     type: TICK,
     payload: {
@@ -59,41 +57,38 @@ export const actions = {
   increment,
   doubleAsync,
   doubleObs
-};
+}
 
-const initialState = 0;
+const initialState = 0
 
 // ------------------------------------
 // Epic
 // ------------------------------------
 export const epic = combineEpics(
 
-  //Async click of Double button, with a delay
+  // Async click of Double button, with a delay
   action$ => action$.delay(1000).ofType(DOUBLE_OBS).map(action => {
-    return increment(-1);
+    return increment(-1)
   }),
 
-  //Received (usually) from socket.io tick - map to incrementing.
+  // Received (usually) from socket.io tick - map to incrementing.
   action$ => action$.ofType(TICK).map(action => {
-    return increment(1);
+    return increment(1)
   })
-);
+)
 
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
   [COUNTER_INCREMENT] : (state, action) => state + action.payload
-};
+}
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export default function (state = initialState, action) {
-
-  const handler = ACTION_HANDLERS[action.type];
+  const handler = ACTION_HANDLERS[action.type]
   return handler ? handler(state, action) : state
 }
-
-
 
